@@ -1,0 +1,41 @@
+{% extends "network/layout.html" %}
+
+{%  block body  %}
+    <h2>Following</h2>
+
+    {%  for post in posts  %}
+    <div class="card mx-auto w-100 m-3">
+        <div class="card-body">
+            <h5 class="card-title">
+                <a href="{% url 'profile' post.user.id %}">{{  post.user.username.capitalize  }}</a>
+            </h5>
+            <p class="card-text">{{ post.content }}</p>
+            
+            <span style="color: gray;">{{  post.date  }}, {{  post.time  }}</span>
+            <br>
+            {% if user.is_authenticated %}
+                {% if user in post.liked.all %}
+                    <a class="like" data-post="{{  post.id  }}" href="#">Unlike</a> <br>
+                {% else %} 
+                    <a class="like" data-post="{{  post.id  }}" href="#">Like</a> <br>
+                {% endif %}
+
+            {% endif %}
+            <span style="color: green" id="span{{  post.id  }}">{{ post.liked.all | length }} </span><span style="color: green"> likes</span>
+
+        </div>
+    </div>
+    {%  endfor  %}
+
+
+    <div class="pagination">
+        {%  if posts.has_previous  %}
+            <li class="page-item"><a class="page-link" href="?page={{ posts.previous_page_number }}">Previous</a></li>
+        {%  endif  %}
+
+        {%  if posts.has_next  %}
+            <li class="page-item"><a class="page-link" href="?page={{ posts.next_page_number }}">Next</a></li>
+        {%  endif  %}
+    </div>
+
+{%  endblock  %}
